@@ -10,6 +10,5 @@ import androidx.compose.ui.Modifier
 fun HomeRoute(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
         Text("HomeRoute")
-
     }
 }

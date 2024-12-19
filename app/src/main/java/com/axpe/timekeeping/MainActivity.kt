@@ -29,7 +29,13 @@ class MainActivity : ComponentActivity() {
                         startDestination = LoginRoute,
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        screenLogin { navController.navigateToHome() }
+                        screenLogin {
+                            navController.navigateToHome {
+                                popUpTo(LoginRoute) {
+                                    inclusive = true
+                                }
+                            }
+                        }
                         screenHome()
                     }
                 }
