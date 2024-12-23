@@ -110,17 +110,14 @@ fun Calendar(
 
 @Composable
 fun Modifier.calculateBorder(currentDate: LocalDate, dates: List<DayState>): Modifier {
-    Log.d("AMG", "currentDate: $currentDate")
-    val nextDate = currentDate.plusDays(1)
-    val nextDateState = dates.find { it.date == nextDate }
-    val upperDate = currentDate.plusDays(7)
-    val upperDateState = dates.find { it.date == upperDate }
-    Log.d("AMG", "nextDate: $nextDate")
-    val previousDate = currentDate.minusDays(1)
-    val previousDateState = dates.find { it.date == previousDate }
-    val lowerDate = currentDate.minusDays(7)
-    val lowerDateState = dates.find { it.date == lowerDate }
-    Log.d("AMG", "previousDate: $previousDate")
+//    val nextDate = currentDate.plusDays(1)
+//    val nextDateState = dates.find { it.date == nextDate }
+//    val upperDate = currentDate.plusDays(7)
+//    val upperDateState = dates.find { it.date == upperDate }
+//    val previousDate = currentDate.minusDays(1)
+//    val previousDateState = dates.find { it.date == previousDate }
+//    val lowerDate = currentDate.minusDays(7)
+//    val lowerDateState = dates.find { it.date == lowerDate }
     return this
         .clip(
             AbsoluteCutCornerShape(
