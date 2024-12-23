@@ -1,6 +1,5 @@
 package com.axpe.timekeeping.core
 
-import android.util.Log
 import com.axpe.timekeeping.BuildConfig
 import com.axpe.timekeeping.core.model.NetworkLogin
 import kotlinx.serialization.json.Json
