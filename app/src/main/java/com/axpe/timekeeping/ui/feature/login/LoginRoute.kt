@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -45,21 +46,16 @@ fun LoginRoute(
     val state by viewModel.loginUiState.collectAsStateWithLifecycle()
     val userData by context.getDataStoreUser()
         .collectAsStateWithLifecycle(UserData.notLogged())
-    LaunchedEffect(state) {
-        when (val st = state) {
-            is LoginViewModel.LoginUiState.Success -> {
-                if (st.login.employee > 0) {
-                    coroutineScope.launch {
-                        context.setDataStoreUsername(st.login.fullName)
-                        context.setDataStoreUserId(st.login.employee)
-                        context.setLogged()
-                    }
+    LaunchedEffect(state.logged) {
+        if (state.logged) {
+            if (state.data != null) {
+                coroutineScope.launch {
+                    context.setDataStoreUsername(state.data!!.fullName)
+                    context.setDataStoreUserId(state.data!!.employee)
+                    context.setLogged()
                 }
-                navigateToHome()
-
             }
-
-            else -> {}
+            navigateToHome()
         }
     }
     when (userData.isLogged) {
@@ -80,18 +76,15 @@ fun LoginRoute(
             }
         }
 
-        false -> when (state) {
-            LoginViewModel.LoginUiState.Idle -> {
-                LoginScreen(modifier, login = viewModel::doLogin)
+        false ->
+            Column {
+                LoginScreen(
+                    modifier = modifier,
+                    isLoading = state.isLoading,
+                    error = state.error,
+                    login = viewModel::doLogin
+                )
             }
-
-            LoginViewModel.LoginUiState.Loading -> {
-                Text("Loading")
-            }
-
-            is LoginViewModel.LoginUiState.Error -> {}
-            else -> {}
-        }
 
     }
 
@@ -101,6 +94,8 @@ fun LoginRoute(
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+    error: String? = null,
     login: (username: String, password: String) -> Unit
 ) {
     val (username, setUsername) = remember { mutableStateOf("") }
@@ -126,6 +121,11 @@ fun LoginScreen(
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(stringResource(R.string.password)) })
+        }
+        if (isLoading) {
+            Text("Loading...")
+        } else if (error != null) {
+            Text(error)
         }
         Spacer(Modifier.height(64.dp))
         Button(
