@@ -12,7 +12,7 @@ class CalendarDataSource {
                 if (date.monthValue == yearMonth.monthValue) {
                     DayState(
                         date = date,
-                        isSelected = date.isNonWorkableDay,
+                        isSelected = date.isNonWorkableDay && date.isBefore(LocalDate.now().plusDays(1)),
                         isSelectable = date.isNonWorkableDay,
                     )
                 } else {
@@ -36,6 +36,7 @@ private val LocalDate.isNonWorkableDay: Boolean
         return when {
             this.dayOfWeek.value == 6 || this.dayOfWeek.value == 7 ||
                     spainNationalHolidays.map { it.date }.contains(this) -> false
+
             else -> true
         }
     }

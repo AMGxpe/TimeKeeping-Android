@@ -7,7 +7,7 @@ data class NetworkLogin(
     val user: String,
 //    val pass: String,
     val fullName: String,
-    val employee: Int,
+    val employee: Long,
 //    val enterprise: Int,
 //    val manager: String?,
 //    val rol: Int,

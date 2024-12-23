@@ -12,17 +12,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axpe.timekeeping.R
+import com.axpe.timekeeping.clearUserSession
+import com.axpe.timekeeping.core.model.UserData
+import com.axpe.timekeeping.getDataStoreUser
+import com.axpe.timekeeping.setDataStoreUserId
+import com.axpe.timekeeping.setDataStoreUsername
+import com.axpe.timekeeping.setLogged
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginRoute(
@@ -30,23 +40,61 @@ fun LoginRoute(
     viewModel: LoginViewModel = viewModel(),
     navigateToHome: () -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     val state by viewModel.loginUiState.collectAsStateWithLifecycle()
-    when (state) {
-        LoginViewModel.LoginUiState.Idle -> {
-            Text("Loading")
-        }
+    val userData by context.getDataStoreUser()
+        .collectAsStateWithLifecycle(UserData.notLogged())
+    LaunchedEffect(state) {
+        when (val st = state) {
+            is LoginViewModel.LoginUiState.Success -> {
+                if (st.login.employee > 0) {
+                    coroutineScope.launch {
+                        context.setDataStoreUsername(st.login.fullName)
+                        context.setDataStoreUserId(st.login.employee)
+                        context.setLogged()
+                    }
+                }
+                navigateToHome()
 
-        LoginViewModel.LoginUiState.Loading -> {
-            Text("Loading")
-        }
+            }
 
-        is LoginViewModel.LoginUiState.Success -> {
-            navigateToHome()
+            else -> {}
         }
-
-        is LoginViewModel.LoginUiState.Error -> {}
     }
-    LoginScreen(modifier, login = viewModel::doLogin)
+    when (userData.isLogged) {
+        true -> {
+            Column(
+                Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text("Logged as ${userData.username}")
+                Button(onClick = { viewModel.next() }) {
+                    Text("Continue")
+                }
+                Button(onClick = { coroutineScope.launch { context.clearUserSession() } }) {
+                    Text("Acceder con otra cuenta")
+                }
+
+            }
+        }
+
+        false -> when (state) {
+            LoginViewModel.LoginUiState.Idle -> {
+                LoginScreen(modifier, login = viewModel::doLogin)
+            }
+
+            LoginViewModel.LoginUiState.Loading -> {
+                Text("Loading")
+            }
+
+            is LoginViewModel.LoginUiState.Error -> {}
+            else -> {}
+        }
+
+    }
+
 }
 
 
