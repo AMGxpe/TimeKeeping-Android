@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.axpe.timekeeping.core.CalendarDataSource
 import com.axpe.timekeeping.core.TimeKeepingRepository
 import com.axpe.timekeeping.ui.shared.calendar.DayState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

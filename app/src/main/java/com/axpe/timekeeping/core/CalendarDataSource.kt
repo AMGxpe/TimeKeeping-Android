@@ -12,7 +12,9 @@ class CalendarDataSource {
                 if (date.monthValue == yearMonth.monthValue) {
                     DayState(
                         date = date,
-                        isSelected = date.isNonWorkableDay && date.isBefore(LocalDate.now().plusDays(1)),
+                        isSelected = date.isNonWorkableDay && date.isBefore(
+                            LocalDate.now().plusDays(1)
+                        ),
                         isSelectable = date.isNonWorkableDay,
                     )
                 } else {
