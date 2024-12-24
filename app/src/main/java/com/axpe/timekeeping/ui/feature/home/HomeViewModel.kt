@@ -53,6 +53,7 @@ class HomeViewModel : ViewModel() {
                     val now = dayState.date!!.atStartOfDay().toInstant(ZoneOffset.UTC)
                     timeKeepingRepository.sendTimeKeeping(userId, now)
                 }
+            _uiState.update { it.copy(isLoading = false) }
         }
     }
 }

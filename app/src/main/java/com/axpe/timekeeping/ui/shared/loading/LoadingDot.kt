@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -34,23 +35,54 @@ private const val AnimationDurationMillis = 300
 
 private const val AnimationDelayMillis = AnimationDurationMillis / IndicatorsSize
 
+
+enum class AnimationType {
+    Bounce,
+    Fade
+}
+
+private val AnimationType.animationDuration: Int
+    get() = when (this) {
+        AnimationType.Bounce -> 300
+        AnimationType.Fade -> 600
+    }
+private val AnimationType.animationDelay: Int
+    get() = animationDuration / NumIndicators
+
+private val AnimationType.initialValue: Float
+    get() = when (this) {
+        AnimationType.Bounce -> IndicatorsSize / 2F
+        AnimationType.Fade -> 1F
+    }
+
+private val AnimationType.targetValue: Float
+    get() = when (this) {
+        AnimationType.Bounce -> -IndicatorsSize / 2F
+        AnimationType.Fade -> 0.2F
+    }
+
 @Composable
 fun LoadingIndicator(
     animating: Boolean,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
-    indicatorSpacing: Dp = 8.dp
+    indicatorSpacing: Dp = 8.dp,
+    animationType: AnimationType
 ) {
     val animatedValues = List(NumIndicators) { index ->
-        var animatedValue by remember(key1 = animating) { mutableFloatStateOf(0f) }
-        LaunchedEffect(key1 = animating) {
+        var animatedValue by remember(key1 = animating, key2 = animationType) {
+            mutableFloatStateOf(
+                0f
+            )
+        }
+        LaunchedEffect(key1 = animating, key2 = animationType) {
             animate(
-                initialValue = IndicatorsSize / 2f,
-                targetValue = -IndicatorsSize / 2f,
+                initialValue = animationType.initialValue,
+                targetValue = animationType.targetValue,
                 animationSpec = infiniteRepeatable(
-                    animation = tween(durationMillis = AnimationDurationMillis),
+                    animation = tween(durationMillis = animationType.animationDuration),
                     repeatMode = RepeatMode.Reverse,
-                    initialStartOffset = StartOffset(AnimationDelayMillis * index),
+                    initialStartOffset = StartOffset(animationType.animationDelay * index),
                 ),
             ) { value, _ -> animatedValue = value }
         }
@@ -64,7 +96,12 @@ fun LoadingIndicator(
                     .padding(horizontal = indicatorSpacing)
                     .width(12.dp)
                     .aspectRatio(1F)
-                    .offset(y = animatedValue.dp),
+                    .then(
+                        when (animationType) {
+                            AnimationType.Bounce -> Modifier.offset(y = animatedValue.dp)
+                            AnimationType.Fade -> Modifier.graphicsLayer { alpha = animatedValue }
+                        }
+                    ),
                 color = color
             )
         }

@@ -19,6 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axpe.timekeeping.core.model.UserData
 import com.axpe.timekeeping.getDataStoreUser
 import com.axpe.timekeeping.ui.shared.calendar.Calendar
+import com.axpe.timekeeping.ui.shared.loading.AnimationType
 import com.axpe.timekeeping.ui.shared.loading.LoadingButton
 
 
@@ -53,7 +54,8 @@ fun HomeRoute(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewMode
             modifier = Modifier.fillMaxWidth(0.7F),
             onClick = { viewModel.sendDates(user.value.userId) },
             enabled = !state.isLoading,
-            loading = state.isLoading
+            loading = state.isLoading,
+            animationType = AnimationType.Fade
         ) {
             Text("Fire TimeKeeping")
         }

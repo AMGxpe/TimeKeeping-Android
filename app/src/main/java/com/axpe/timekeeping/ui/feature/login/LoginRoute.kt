@@ -32,6 +32,7 @@ import com.axpe.timekeeping.getDataStoreUser
 import com.axpe.timekeeping.setDataStoreUserId
 import com.axpe.timekeeping.setDataStoreUsername
 import com.axpe.timekeeping.setLogged
+import com.axpe.timekeeping.ui.shared.loading.LoadingButton
 import kotlinx.coroutines.launch
 
 @Composable
@@ -121,14 +122,14 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(stringResource(R.string.password)) })
         }
-        if (isLoading) {
-            Text("Loading...")
-        } else if (error != null) {
+        if (error != null) {
             Text(error)
         }
         Spacer(Modifier.height(64.dp))
-        Button(
+        LoadingButton(
+            loading = isLoading,
             modifier = Modifier.fillMaxWidth(),
+
             onClick = { login(username, password) }) {
             Text(stringResource(R.string.login))
         }

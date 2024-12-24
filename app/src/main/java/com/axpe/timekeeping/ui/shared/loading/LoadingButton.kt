@@ -20,6 +20,7 @@ fun LoadingButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     loading: Boolean = false,
+    animationType: AnimationType = AnimationType.Bounce,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     indicatorSpacing: Dp = 16.dp,
     content: @Composable () -> Unit
@@ -38,7 +39,8 @@ fun LoadingButton(
                 animating = loading,
                 modifier = Modifier.graphicsLayer { alpha = loadingAlpha },
                 color = if (enabled) colors.contentColor else colors.disabledContentColor,
-                indicatorSpacing = indicatorSpacing
+                indicatorSpacing = indicatorSpacing,
+                animationType = animationType
             )
             Box(modifier = Modifier.graphicsLayer { alpha = contentAlpha }) {
                 content()
