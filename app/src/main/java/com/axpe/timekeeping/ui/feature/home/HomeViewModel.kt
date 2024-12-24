@@ -1,11 +1,11 @@
 package com.axpe.timekeeping.ui.feature.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axpe.timekeeping.core.CalendarDataSource
 import com.axpe.timekeeping.core.TimeKeepingRepository
 import com.axpe.timekeeping.ui.shared.calendar.DayState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -47,18 +47,22 @@ class HomeViewModel : ViewModel() {
     }
 
     fun sendDates(userId: Long) {
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            Log.d("HomeViewModel", "Sending dates: ${_uiState.value.days.filter { it.isSelected }}")
-            _uiState.value.days.filter { dayState -> dayState.isSelected && dayState.date != null }
-                .forEach { dayState ->
-                    val now = dayState.date!!.atStartOfDay().toInstant(ZoneOffset.UTC)
-                    timeKeepingRepository.sendTimeKeeping(userId, now)
-                }
+            delay(2500)
+            _uiState.update { it.copy(isLoading = false) }
+            return@launch
+//            _uiState.value.days.filter { dayState -> dayState.isSelected && dayState.date != null }
+//                .forEach { dayState ->
+//                    val now = dayState.date!!.atStartOfDay().toInstant(ZoneOffset.UTC)
+//                    timeKeepingRepository.sendTimeKeeping(userId, now)
+//                }
         }
     }
 }
 
 data class HomeViewModelUiState(
     val days: List<DayState>,
+    val isLoading: Boolean = false,
     val yearMonth: YearMonth = YearMonth.now()
 )

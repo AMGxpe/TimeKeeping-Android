@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axpe.timekeeping.core.model.UserData
 import com.axpe.timekeeping.getDataStoreUser
 import com.axpe.timekeeping.ui.shared.calendar.Calendar
+import com.axpe.timekeeping.ui.shared.loading.LoadingButton
 
 
 @Composable
@@ -49,10 +50,12 @@ fun HomeRoute(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewMode
             }
         }
 
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(0.7F),
-            onClick = { viewModel.sendDates(user.value.userId) }) {
+        LoadingButton(
+            modifier = Modifier.fillMaxWidth(0.7F),
+            onClick = { viewModel.sendDates(user.value.userId) },
+            enabled = !state.isLoading,
+            loading = state.isLoading
+        ) {
             Text("Fire TimeKeeping")
         }
     }
