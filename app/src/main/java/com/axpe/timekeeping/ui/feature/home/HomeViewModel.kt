@@ -49,14 +49,11 @@ class HomeViewModel : ViewModel() {
     fun sendDates(userId: Long) {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            delay(2500)
-            _uiState.update { it.copy(isLoading = false) }
-            return@launch
-//            _uiState.value.days.filter { dayState -> dayState.isSelected && dayState.date != null }
-//                .forEach { dayState ->
-//                    val now = dayState.date!!.atStartOfDay().toInstant(ZoneOffset.UTC)
-//                    timeKeepingRepository.sendTimeKeeping(userId, now)
-//                }
+            _uiState.value.days.filter { dayState -> dayState.isSelected && dayState.date != null }
+                .forEach { dayState ->
+                    val now = dayState.date!!.atStartOfDay().toInstant(ZoneOffset.UTC)
+                    timeKeepingRepository.sendTimeKeeping(userId, now)
+                }
         }
     }
 }
