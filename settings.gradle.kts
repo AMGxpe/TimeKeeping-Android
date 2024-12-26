@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "TimeKeeping"
 include(":app")
+include(":benchmark")
