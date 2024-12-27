@@ -37,7 +37,6 @@ fun LoginRoute(
     navigateToHome: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
     val state by viewModel.loginUiState.collectAsStateWithLifecycle()
     val userData by viewModel.userData.collectAsStateWithLifecycle(UserData.notLogged())
     LaunchedEffect(state.logged) {
