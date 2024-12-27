@@ -4,10 +4,11 @@ import com.axpe.timekeeping.ui.shared.calendar.DayState
 import com.axpe.timekeeping.ui.shared.calendar.getDayOfMonthStartingFromMonday
 import java.time.LocalDate
 import java.time.YearMonth
+import javax.inject.Inject
 
-class CalendarDataSource {
-    fun getDates(yearMonth: YearMonth): List<DayState> {
-        return yearMonth.getDayOfMonthStartingFromMonday()
+class CalendarDataSource @Inject constructor() {
+    fun getDates(yearMonth: YearMonth): List<DayState> =
+        yearMonth.getDayOfMonthStartingFromMonday()
             .map { date ->
                 if (date.monthValue == yearMonth.monthValue) {
                     DayState(
@@ -25,7 +26,6 @@ class CalendarDataSource {
                     )
                 }
             }
-    }
 }
 
 private data class HolidaysDay(
