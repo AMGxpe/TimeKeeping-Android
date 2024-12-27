@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.secrets)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+
 }
 
 android {
@@ -69,6 +72,17 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+
+    // For instrumentation tests
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
+
+    // For local unit tests
+    testImplementation(libs.hilt.android.testing)
+    kspTest(libs.hilt.compiler)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

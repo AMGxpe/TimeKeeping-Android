@@ -22,6 +22,7 @@ import com.axpe.timekeeping.ui.feature.home.navigation.screenHome
 import com.axpe.timekeeping.ui.feature.login.navigation.LoginRoute
 import com.axpe.timekeeping.ui.feature.login.navigation.screenLogin
 import com.axpe.timekeeping.ui.theme.TimeKeepingTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -78,6 +79,7 @@ suspend fun Context.setLogged() {
     }
 }
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

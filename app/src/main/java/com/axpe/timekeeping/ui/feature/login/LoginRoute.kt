@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axpe.timekeeping.R
@@ -38,7 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginRoute(
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = viewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
     navigateToHome: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()

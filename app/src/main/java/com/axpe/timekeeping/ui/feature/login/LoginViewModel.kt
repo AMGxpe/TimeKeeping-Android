@@ -4,19 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axpe.timekeeping.core.TimeKeepingRepository
 import com.axpe.timekeeping.core.model.NetworkLogin
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val timeKeepingRepository: TimeKeepingRepository) :
+    ViewModel() {
     private val _loginUiState = MutableStateFlow(LoginUiState())
     val loginUiState: StateFlow<LoginUiState> = _loginUiState.asStateFlow()
-
-    private val timeKeepingRepository = TimeKeepingRepository()
-
 
     fun next() {
         _loginUiState.update { it.copy(isLoading = false, logged = true, error = null) }
