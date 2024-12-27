@@ -15,10 +15,10 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 @InstallIn(SingletonComponent::class)
 object AppModule {
     @Provides
-    fun providesJson() = Json { ignoreUnknownKeys = true }
+    fun providesJson(): Json = Json { ignoreUnknownKeys = true }
 
     @Provides
-    fun providesRetrofit(networkJson: Json) = Retrofit.Builder()
+    fun providesRetrofit(networkJson: Json): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.API_URL)
         .addConverterFactory(
             networkJson.asConverterFactory(MediaType.parse("application/json; charset=UTF8")!!)
@@ -26,7 +26,7 @@ object AppModule {
         .build()
 
     @Provides
-    fun providesTimeKeepingDataSource(retrofit: Retrofit) =
+    fun providesTimeKeepingDataSource(retrofit: Retrofit): TimeKeepingDataSource =
         retrofit.create(TimeKeepingDataSource::class.java)
 
 }
