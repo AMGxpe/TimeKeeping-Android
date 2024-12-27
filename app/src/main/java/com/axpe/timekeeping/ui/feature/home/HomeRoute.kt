@@ -16,9 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axpe.timekeeping.core.model.UserData
-import com.axpe.timekeeping.getDataStoreUser
 import com.axpe.timekeeping.ui.shared.calendar.Calendar
 import com.axpe.timekeeping.ui.shared.loading.AnimationType
 import com.axpe.timekeeping.ui.shared.loading.LoadingButton
@@ -26,9 +24,8 @@ import com.axpe.timekeeping.ui.shared.loading.LoadingButton
 
 @Composable
 fun HomeRoute(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewModel()) {
-    val context = LocalContext.current
     val user =
-        context.getDataStoreUser().collectAsStateWithLifecycle(UserData.notLogged())
+        viewModel.userData.collectAsStateWithLifecycle(UserData.notLogged())
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     Column(
         modifier = modifier

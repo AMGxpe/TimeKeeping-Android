@@ -3,6 +3,7 @@ package com.axpe.timekeeping.ui.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axpe.timekeeping.core.CalendarDataSource
+import com.axpe.timekeeping.core.PreferencesDataSource
 import com.axpe.timekeeping.core.TimeKeepingRepository
 import com.axpe.timekeeping.ui.shared.calendar.DayState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,11 +18,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val calendarDataSource: CalendarDataSource,
+    private val preferencesDataSource: PreferencesDataSource,
     private val timeKeepingRepository: TimeKeepingRepository
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow(HomeViewModelUiState(emptyList()))
     val uiState = _uiState.asStateFlow()
+
+    val userData = preferencesDataSource.getDataStoreUser()
 
     init {
         refreshDays(YearMonth.now())

@@ -25,14 +25,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.axpe.timekeeping.R
-import com.axpe.timekeeping.clearUserSession
 import com.axpe.timekeeping.core.model.UserData
-import com.axpe.timekeeping.getDataStoreUser
-import com.axpe.timekeeping.setDataStoreUserId
-import com.axpe.timekeeping.setDataStoreUsername
-import com.axpe.timekeeping.setLogged
 import com.axpe.timekeeping.ui.shared.loading.LoadingButton
 import kotlinx.coroutines.launch
 
@@ -45,16 +39,13 @@ fun LoginRoute(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val state by viewModel.loginUiState.collectAsStateWithLifecycle()
-    val userData by context.getDataStoreUser()
-        .collectAsStateWithLifecycle(UserData.notLogged())
+    val userData by viewModel.userData.collectAsStateWithLifecycle(UserData.notLogged())
     LaunchedEffect(state.logged) {
         if (state.logged) {
             if (state.data != null) {
-                coroutineScope.launch {
-                    context.setDataStoreUsername(state.data!!.fullName)
-                    context.setDataStoreUserId(state.data!!.employee)
-                    context.setLogged()
-                }
+                viewModel.setDataStoreUsername(state.data!!.fullName)
+                viewModel.setDataStoreUserId(state.data!!.employee)
+                viewModel.setLogged()
             }
             navigateToHome()
         }
@@ -70,7 +61,7 @@ fun LoginRoute(
                 Button(onClick = { viewModel.next() }) {
                     Text("Continue")
                 }
-                Button(onClick = { coroutineScope.launch { context.clearUserSession() } }) {
+                Button(onClick = { coroutineScope.launch { viewModel.clearUserSession() } }) {
                     Text("Acceder con otra cuenta")
                 }
 
