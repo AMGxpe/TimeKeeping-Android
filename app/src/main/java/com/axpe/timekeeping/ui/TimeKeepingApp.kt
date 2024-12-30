@@ -15,6 +15,8 @@ import androidx.navigation.compose.NavHost
 import com.axpe.timekeeping.ui.feature.home.navigation.screenHome
 import com.axpe.timekeeping.ui.feature.login.navigation.LoginRoute
 import com.axpe.timekeeping.ui.feature.login.navigation.screenLogin
+import com.axpe.timekeeping.ui.feature.reporting.navigation.ReportingRoute
+import com.axpe.timekeeping.ui.feature.reporting.navigation.screenReporting
 
 @Composable
 fun TimeKeepingApp(appState: TimeKeepingAppState) {
@@ -29,7 +31,7 @@ fun TimeKeepingApp(appState: TimeKeepingAppState) {
                     appState.topLevelDestinations.forEach { destination ->
                         NavigationBarItem(
                             selected = appState.currentDestination?.route == destination.route.java.name,
-                            onClick = {},
+                            onClick = { appState.navigateToTopLevelDestination(destination) },
                             icon = {
                                 Icon(destination.unselectedIcon, contentDescription = null)
                             }
@@ -42,7 +44,7 @@ fun TimeKeepingApp(appState: TimeKeepingAppState) {
     ) { innerPadding ->
         NavHost(
             navController = appState.navController,
-            startDestination = LoginRoute,
+            startDestination = ReportingRoute,
             modifier = Modifier.padding(innerPadding)
         ) {
             screenLogin {
@@ -53,6 +55,7 @@ fun TimeKeepingApp(appState: TimeKeepingAppState) {
                 }
             }
             screenHome()
+            screenReporting()
         }
     }
 
