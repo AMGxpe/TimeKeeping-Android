@@ -6,9 +6,9 @@ import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.axpe.timekeeping.BuildConfig
-import com.axpe.timekeeping.core.HourControlRetrofit
+import com.axpe.timekeeping.core.HourControlApi
 import com.axpe.timekeeping.core.ReportingDataSource
-import com.axpe.timekeeping.core.ReportingRetrofit
+import com.axpe.timekeeping.core.ReportingApi
 import com.axpe.timekeeping.core.TimeKeepingDataSource
 import dagger.Module
 import dagger.Provides
@@ -30,7 +30,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    @HourControlRetrofit
+    @HourControlApi
     fun providesHourControlRetrofit(networkJson: Json): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.API_URL)
         .addConverterFactory(
@@ -40,7 +40,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    @ReportingRetrofit
+    @ReportingApi
     fun providesReportingRetrofit(networkJson: Json): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.REPORTING_API_URL)
         .addConverterFactory(
@@ -50,12 +50,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesTimeKeepingDataSource(@HourControlRetrofit retrofit: Retrofit): TimeKeepingDataSource =
+    fun providesTimeKeepingDataSource(@HourControlApi retrofit: Retrofit): TimeKeepingDataSource =
         retrofit.create(TimeKeepingDataSource::class.java)
 
     @Provides
     @Singleton
-    fun providesReportingDataSource(@ReportingRetrofit retrofit: Retrofit): ReportingDataSource =
+    fun providesReportingDataSource(@ReportingApi retrofit: Retrofit): ReportingDataSource =
         retrofit.create(ReportingDataSource::class.java)
 
 

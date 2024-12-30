@@ -11,5 +11,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 fun ReportingRoute(modifier: Modifier = Modifier, viewModel: ReportingViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Text(text = "Cosas: ${state.projects}")
+    ReportingScreen(modifier)
+
+}
+
+@Composable
+fun ReportingScreen(modifier: Modifier = Modifier) {
+    Text(text = "Reporting", modifier = modifier)
 }
