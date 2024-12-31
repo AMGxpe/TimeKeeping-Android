@@ -1,16 +1,29 @@
 package com.axpe.timekeeping.core
 
+import com.axpe.timekeeping.core.model.NetworkConcept
 import com.axpe.timekeeping.core.model.NetworkProject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import java.time.YearMonth
 import javax.inject.Inject
 
 class ReportingRepository @Inject constructor(
     private val reportingDataSource: ReportingDataSource,
     private val preferencesDataSource: PreferencesDataSource
 ) {
-    suspend fun getProjects(month: Int, year: Int): Flow<List<NetworkProject>> =
-        preferencesDataSource.getDataStoreUser().map { user ->
-            reportingDataSource.getProjects(user.userId, month, year)
+    fun getProjects(yearMonth: YearMonth): Flow<List<NetworkProject>> =
+        preferencesDataSource.withUserId { userId ->
+            reportingDataSource.getProjects(userId, yearMonth.monthValue, yearMonth.year)
         }
+
+    fun getConcepts(yearMonth: YearMonth, codProject: Int): Flow<List<NetworkConcept>> =
+        preferencesDataSource.withUserId { userId ->
+            reportingDataSource.getConceptsByProject(
+                userId = userId,
+                month = yearMonth.monthValue,
+                year = yearMonth.year,
+                codProject = codProject
+            )
+        }
+
+
 }

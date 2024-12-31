@@ -6,7 +6,6 @@ import com.axpe.timekeeping.core.PreferencesDataSource
 import com.axpe.timekeeping.core.TimeKeepingRepository
 import com.axpe.timekeeping.core.model.NetworkLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,7 +31,6 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = timeKeepingRepository.doLogin(username, password)
-                delay(900)
                 _loginUiState.update {
                     it.copy(
                         isLoading = false,

@@ -1,6 +1,5 @@
 package com.axpe.timekeeping.core
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -20,6 +19,9 @@ private val loggedKey = booleanPreferencesKey("logged")
 class PreferencesDataSource @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
+    fun <T> withUserId(block: suspend (userId: Long) -> T): Flow<T> =
+        getDataStoreUser().map { user -> block(user.userId) }
+
 
     fun getDataStoreUser(): Flow<UserData> {
         return dataStore.data.map { user ->
@@ -36,6 +38,7 @@ class PreferencesDataSource @Inject constructor(
             )
         }
     }
+
     fun getDataStoreUserId(): Flow<Long> {
         return dataStore.data.map { user ->
             user[longPreferencesKey("userId")] ?: 0L
