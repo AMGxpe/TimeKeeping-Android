@@ -11,12 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.axpe.timekeeping.core.model.UserData
+import com.axpe.timekeeping.R
 import com.axpe.timekeeping.ui.shared.calendar.Calendar
 import com.axpe.timekeeping.ui.shared.loading.AnimationType
 import com.axpe.timekeeping.ui.shared.loading.LoadingButton
@@ -24,8 +24,6 @@ import com.axpe.timekeeping.ui.shared.loading.LoadingButton
 
 @Composable
 fun HomeRoute(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewModel()) {
-    val user =
-        viewModel.userData.collectAsStateWithLifecycle(UserData.notLogged())
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     Column(
         modifier = modifier
@@ -34,12 +32,13 @@ fun HomeRoute(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltView
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Text(
-            user.value.username,
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
-        )
+        state.user?.let {
+            Text(
+                it.username,
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+        }
         Calendar(dates = state.days, yearMonth = state.yearMonth, updateYearMonth = {
             viewModel.refreshDays(it)
         }) {
@@ -50,12 +49,12 @@ fun HomeRoute(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltView
 
         LoadingButton(
             modifier = Modifier.fillMaxWidth(0.7F),
-            onClick = { viewModel.sendDates(user.value.userId) },
+            onClick = { viewModel.sendDates() },
             enabled = !state.isLoading,
             loading = state.isLoading,
             animationType = AnimationType.Fade
         ) {
-            Text("Fire TimeKeeping")
+            Text(stringResource(R.string.fire_timekeeping))
         }
     }
 }

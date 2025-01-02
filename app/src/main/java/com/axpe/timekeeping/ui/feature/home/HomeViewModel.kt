@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.axpe.timekeeping.core.CalendarDataSource
 import com.axpe.timekeeping.core.PreferencesDataSource
 import com.axpe.timekeeping.core.TimeKeepingRepository
+import com.axpe.timekeeping.core.model.UserData
 import com.axpe.timekeeping.ui.shared.calendar.DayState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,17 +19,24 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val calendarDataSource: CalendarDataSource,
-    private val preferencesDataSource: PreferencesDataSource,
-    private val timeKeepingRepository: TimeKeepingRepository
+    private val timeKeepingRepository: TimeKeepingRepository,
+    private val preferencesDataSource: PreferencesDataSource
 ) : ViewModel() {
     private val _uiState =
-        MutableStateFlow(HomeViewModelUiState(emptyList()))
+        MutableStateFlow(HomeViewModelUiState(days = emptyList()))
     val uiState = _uiState.asStateFlow()
 
-    val userData = preferencesDataSource.getDataStoreUser()
-
     init {
+        updateUserInfo()
         refreshDays(YearMonth.now())
+    }
+
+    private fun updateUserInfo() {
+        viewModelScope.launch {
+            preferencesDataSource.getDataStoreUser().collect { user ->
+                _uiState.update { it.copy(user = user) }
+            }
+        }
     }
 
     fun refreshDays(yearMonth: YearMonth) {
@@ -53,13 +61,13 @@ class HomeViewModel @Inject constructor(
         _uiState.update { it.copy(days = selectedDays) }
     }
 
-    fun sendDates(userId: Long) {
+    fun sendDates() {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             _uiState.value.days.filter { dayState -> dayState.isSelected && dayState.date != null }
                 .forEach { dayState ->
                     val now = dayState.date!!.atStartOfDay().toInstant(ZoneOffset.UTC)
-                    timeKeepingRepository.sendTimeKeeping(userId, now)
+                    timeKeepingRepository.sendTimeKeeping(now)
                 }
             _uiState.update { it.copy(isLoading = false) }
         }
@@ -68,6 +76,7 @@ class HomeViewModel @Inject constructor(
 
 data class HomeViewModelUiState(
     val days: List<DayState>,
+    val user: UserData? = null,
     val isLoading: Boolean = false,
     val yearMonth: YearMonth = YearMonth.now()
 )

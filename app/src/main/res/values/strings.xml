@@ -5,4 +5,5 @@
     <string name="login">Login</string>
     <string name="select_project">Select a project</string>
     <string name="select_concept">Select a concept</string>
+    <string name="fire_timekeeping">Fire TimeKeeping</string>
 </resources>
