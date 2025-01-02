@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">TimeKeeping</string>
-    <string name="password">Password</string>
-    <string name="username">Username</string>
-    <string name="login">Login</string>
+    <string name="app_name" translatable="false">TimeKeeping</string>
+    <string name="password" translatable="false">Password</string>
+    <string name="username" translatable="false">Username</string>
+    <string name="login" translatable="false">Login</string>
     <string name="select_project">Select a project</string>
     <string name="select_concept">Select a concept</string>
-    <string name="fire_timekeeping">Fire TimeKeeping</string>
+    <string name="fire_timekeeping" translatable="false">Fire TimeKeeping</string>
 </resources>

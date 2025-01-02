@@ -35,10 +35,7 @@ fun <T> TimeKeepingDropDown(
     ExposedDropdownMenuBox(
         expanded = expandedProject,
         onExpandedChange = { if (!isLoading) setExpandedProject(!expandedProject) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(top = 16.dp)
+        modifier = modifier
     ) {
         Column {
             TextField(

@@ -12,10 +12,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.axpe.timekeeping.navigation.TopLevelDestination
 import com.axpe.timekeeping.ui.feature.home.navigation.screenHome
 import com.axpe.timekeeping.ui.feature.login.navigation.LoginRoute
 import com.axpe.timekeeping.ui.feature.login.navigation.screenLogin
-import com.axpe.timekeeping.ui.feature.reporting.navigation.ReportingRoute
 import com.axpe.timekeeping.ui.feature.reporting.navigation.screenReporting
 
 @Composable
@@ -44,15 +44,11 @@ fun TimeKeepingApp(appState: TimeKeepingAppState) {
     ) { innerPadding ->
         NavHost(
             navController = appState.navController,
-            startDestination = ReportingRoute,
+            startDestination = LoginRoute,
             modifier = Modifier.padding(innerPadding)
         ) {
             screenLogin {
-                appState.navigateToHome {
-                    popUpTo(LoginRoute) {
-                        inclusive = true
-                    }
-                }
+                appState.navigateToTopLevelDestination(TopLevelDestination.REPORTING)
             }
             screenHome()
             screenReporting()

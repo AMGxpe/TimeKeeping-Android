@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.axpe.timekeeping.R
 import com.axpe.timekeeping.ui.shared.calendar.Calendar
+import com.axpe.timekeeping.ui.shared.calendar.CalendarHeader
 import com.axpe.timekeeping.ui.shared.loading.AnimationType
 import com.axpe.timekeeping.ui.shared.loading.LoadingButton
 
@@ -39,11 +40,16 @@ fun HomeRoute(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltView
                 textAlign = TextAlign.Center
             )
         }
-        Calendar(dates = state.days, yearMonth = state.yearMonth, updateYearMonth = {
-            viewModel.refreshDays(it)
-        }) {
-            if (it.isSelectable) {
-                viewModel.updateDate(it)
+        Column {
+            CalendarHeader(
+                yearMonth = state.yearMonth, updateYearMonth = {
+                    viewModel.refreshDays(it)
+                })
+
+            Calendar(dates = state.days) {
+                if (it.isSelectable) {
+                    viewModel.updateDate(it)
+                }
             }
         }
 

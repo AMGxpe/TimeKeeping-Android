@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.AbsoluteCutCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -44,8 +45,6 @@ data class DayState(
 fun Calendar(
     dates: List<DayState>,
     modifier: Modifier = Modifier,
-    yearMonth: YearMonth = YearMonth.now(),
-    updateYearMonth: (YearMonth) -> Unit,
     onClickDate: (DayState) -> Unit
 ) {
     val dayModifier = Modifier
@@ -57,8 +56,7 @@ fun Calendar(
     val emptyDayModifier = Modifier
         .background(MaterialTheme.colorScheme.background)
         .size(64.dp)
-    Column(modifier = modifier) {
-        CalendarHeader(yearMonth = yearMonth, updateYearMonth = updateYearMonth)
+    Box(modifier = modifier) {
         LazyVerticalGrid(columns = GridCells.Fixed(7)) {
             items(daysOfWeek) {
                 Box(
@@ -137,8 +135,12 @@ fun Modifier.calculateBorder(currentDate: LocalDate, dates: List<DayState>): Mod
 }
 
 @Composable
-fun CalendarHeader(yearMonth: YearMonth, updateYearMonth: (YearMonth) -> Unit) {
-    Column(Modifier.fillMaxWidth()) {
+fun CalendarHeader(
+    yearMonth: YearMonth,
+    updateYearMonth: (YearMonth) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier.fillMaxWidth()) {
         Row(
             Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -154,6 +156,11 @@ fun CalendarHeader(yearMonth: YearMonth, updateYearMonth: (YearMonth) -> Unit) {
                 }) {
                     Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null)
 
+                }
+                IconButton(onClick = {
+                    updateYearMonth(YearMonth.now())
+                }) {
+                    Icon(Icons.Default.DateRange, contentDescription = null)
                 }
                 IconButton(onClick = {
                     updateYearMonth(yearMonth.plusMonths(1))

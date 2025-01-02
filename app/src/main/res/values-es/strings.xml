@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_project">Selecciona un proyecto</string>
+    <string name="select_concept">Selecciona un concepto</string>
+</resources>
