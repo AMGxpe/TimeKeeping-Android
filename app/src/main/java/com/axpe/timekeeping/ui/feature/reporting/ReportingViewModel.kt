@@ -1,6 +1,5 @@
 package com.axpe.timekeeping.ui.feature.reporting
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axpe.timekeeping.core.ReportingRepository
@@ -31,20 +30,17 @@ class ReportingViewModel @Inject constructor(
 
     init {
         _uiState.update { it.copy(projectsLoading = true) }
-        viewModelScope.launch {
-            reportingRepository.getProjects(YearMonth.now())
-                .collect { value ->
-                    _uiState.update { it.copy(projects = value, projectsLoading = false) }
-                }
-        }
+        updateProjects()
         viewModelScope.launch {
             selectedProject.filterNotNull()
                 .distinctUntilChanged()
                 .flatMapLatest { selectedProject ->
                     _uiState.update { it.copy(conceptLoading = true, concepts = emptyList()) }
                     selectedConcept.value = null
-                    reportingRepository
-                        .getConcepts(YearMonth.now(), selectedProject.codProject)
+                    reportingRepository.getConcepts(
+                        yearMonth = uiState.value.yearMonth,
+                        codProject = selectedProject.codProject
+                    )
                 }
                 .collectLatest { response ->
                     _uiState.update { it.copy(concepts = response, conceptLoading = false) }
@@ -53,19 +49,33 @@ class ReportingViewModel @Inject constructor(
     }
 
     fun selectProject(project: NetworkProject) {
-        Log.d("AMG", "Cambiamos: $project")
         selectedProject.update {
             it?.copy(codProject = project.codProject, name = project.name) ?: project
         }
-        Log.d("AMG", "Cambiamos: ${selectedProject.value}")
     }
 
     fun selectConcept(concept: NetworkConcept) {
         selectedConcept.value = concept
     }
 
+    fun selectYearMonth(yearMonth: YearMonth) {
+        _uiState.update { it.copy(yearMonth = yearMonth) }
+        updateProjects()
+    }
+
+    private fun updateProjects() {
+        _uiState.update { it.copy(projectsLoading = true) }
+        viewModelScope.launch {
+            reportingRepository.getProjects(uiState.value.yearMonth)
+                .collect { value ->
+                    _uiState.update { it.copy(projects = value, projectsLoading = false) }
+                }
+        }
+    }
+
 
     data class ReportingUiState(
+        val yearMonth: YearMonth = YearMonth.now(),
         val projectsLoading: Boolean = false,
         val conceptLoading: Boolean = false,
         val projects: List<NetworkProject> = emptyList(),
