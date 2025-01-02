@@ -14,6 +14,7 @@ import androidx.navigation.navOptions
 import com.axpe.timekeeping.navigation.TopLevelDestination
 import com.axpe.timekeeping.ui.feature.home.navigation.navigateToHome
 import com.axpe.timekeeping.ui.feature.login.navigation.LoginRoute
+import com.axpe.timekeeping.ui.feature.profile.navigation.navigateToProfile
 import com.axpe.timekeeping.ui.feature.reporting.navigation.navigateToReporting
 
 @Composable
@@ -54,7 +55,10 @@ class TimeKeepingAppState(
 
             when (topLevelDestination) {
                 TopLevelDestination.TIME_CONTROL -> navController.navigateToHome(topLevelNavOptions)
-                TopLevelDestination.REPORTING -> navController.navigateToReporting(topLevelNavOptions)
+                TopLevelDestination.PROFILE -> navController.navigateToProfile(topLevelNavOptions)
+                TopLevelDestination.REPORTING ->
+                    navController.navigateToReporting(topLevelNavOptions)
+
             }
 
         }

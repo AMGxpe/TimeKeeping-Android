@@ -16,6 +16,7 @@ import com.axpe.timekeeping.navigation.TopLevelDestination
 import com.axpe.timekeeping.ui.feature.home.navigation.screenHome
 import com.axpe.timekeeping.ui.feature.login.navigation.LoginRoute
 import com.axpe.timekeeping.ui.feature.login.navigation.screenLogin
+import com.axpe.timekeeping.ui.feature.profile.navigation.screenProfile
 import com.axpe.timekeeping.ui.feature.reporting.navigation.screenReporting
 
 @Composable
@@ -52,6 +53,7 @@ fun TimeKeepingApp(appState: TimeKeepingAppState) {
             }
             screenHome()
             screenReporting()
+            screenProfile()
         }
     }
 
