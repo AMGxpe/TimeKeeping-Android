@@ -12,7 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.axpe.timekeeping.navigation.TopLevelDestination
 import com.axpe.timekeeping.ui.feature.home.navigation.screenHome
 import com.axpe.timekeeping.ui.feature.login.navigation.LoginRoute
 import com.axpe.timekeeping.ui.feature.login.navigation.screenLogin
@@ -49,7 +48,11 @@ fun TimeKeepingApp(appState: TimeKeepingAppState) {
             modifier = Modifier.padding(innerPadding)
         ) {
             screenLogin {
-                appState.navigateToTopLevelDestination(TopLevelDestination.REPORTING)
+                appState.navigateToHome {
+                    popUpTo(LoginRoute) {
+                        inclusive = true
+                    }
+                }
             }
             screenHome()
             screenReporting()
