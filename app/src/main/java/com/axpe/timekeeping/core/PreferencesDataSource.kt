@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.axpe.timekeeping.core.model.UserData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -19,8 +20,13 @@ private val loggedKey = booleanPreferencesKey("logged")
 class PreferencesDataSource @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
-    fun <T> withUserId(block: suspend (userId: Long) -> T): Flow<T> =
+    fun <T> withUserIdFlow(block: suspend (userId: Long) -> T): Flow<T> =
         getDataStoreUser().map { user -> block(user.userId) }
+
+    suspend fun <T> withUserId(block: suspend (userId: Long) -> T): T {
+        val user = getDataStoreUser().first()
+        return block(user.userId)
+    }
 
 
     fun getDataStoreUser(): Flow<UserData> {

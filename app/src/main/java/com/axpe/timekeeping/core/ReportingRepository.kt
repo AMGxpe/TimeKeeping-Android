@@ -11,12 +11,12 @@ class ReportingRepository @Inject constructor(
     private val preferencesDataSource: PreferencesDataSource
 ) {
     fun getProjects(yearMonth: YearMonth): Flow<List<NetworkProject>> =
-        preferencesDataSource.withUserId { userId ->
+        preferencesDataSource.withUserIdFlow { userId ->
             reportingDataSource.getProjects(userId, yearMonth.monthValue, yearMonth.year)
         }
 
     fun getConcepts(yearMonth: YearMonth, codProject: Int): Flow<List<NetworkConcept>> =
-        preferencesDataSource.withUserId { userId ->
+        preferencesDataSource.withUserIdFlow { userId ->
             reportingDataSource.getConceptsByProject(
                 userId = userId,
                 month = yearMonth.monthValue,

@@ -65,6 +65,10 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui)
     implementation(libs.retrofit)
+
+    implementation(platform(libs.okhttp3.bom))
+    implementation(libs.okhttp3)
+    implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.converter.kotlinx.serialization)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.ui.graphics)

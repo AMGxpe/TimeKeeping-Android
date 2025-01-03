@@ -62,8 +62,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun sendDates() {
-        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
             _uiState.value.days.filter { dayState -> dayState.isSelected && dayState.date != null }
                 .forEach { dayState ->
                     val now = dayState.date!!.atStartOfDay().toInstant(ZoneOffset.UTC)

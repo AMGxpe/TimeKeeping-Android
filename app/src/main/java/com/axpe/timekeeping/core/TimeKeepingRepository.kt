@@ -1,5 +1,6 @@
 package com.axpe.timekeeping.core
 
+import android.util.Log
 import com.axpe.timekeeping.core.model.NetworkLogin
 import com.axpe.timekeeping.core.model.NetworkTimeKeeping
 import java.time.Instant
@@ -17,8 +18,7 @@ class TimeKeepingRepository @Inject constructor(
         return timeKeepingDataSource.doLogin("Basic $shieldedPassword")
     }
 
-    fun sendTimeKeeping(day: Instant) = preferencesDataSource.withUserId { userId ->
+    suspend fun sendTimeKeeping(day: Instant) = preferencesDataSource.withUserId { userId ->
         timeKeepingDataSource.sendTimeKeeping(userId, NetworkTimeKeeping.default(day))
-
     }
 }

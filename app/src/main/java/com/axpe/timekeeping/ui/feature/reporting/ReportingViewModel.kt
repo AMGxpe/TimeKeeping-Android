@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axpe.timekeeping.core.CalendarDataSource
 import com.axpe.timekeeping.core.ReportingRepository
+import com.axpe.timekeeping.core.TimeKeepingRepository
 import com.axpe.timekeeping.core.model.NetworkConcept
 import com.axpe.timekeeping.core.model.NetworkProject
 import com.axpe.timekeeping.ui.shared.calendar.DayState
@@ -20,13 +21,15 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.YearMonth
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ReportingViewModel @Inject constructor(
     private val reportingRepository: ReportingRepository,
-    private val calendarDataSource: CalendarDataSource
+    private val calendarDataSource: CalendarDataSource,
+    private val timeKeepingRepository: TimeKeepingRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ReportingUiState())
     val uiState = _uiState.asStateFlow()
@@ -103,10 +106,14 @@ class ReportingViewModel @Inject constructor(
     }
 
     fun sendReporting() {
-        Log.d("AMG", "No se como se hará esto, pero hay que mandarlo todo")
         viewModelScope.launch {
             _uiState.update { it.copy(reportingLoading = true) }
             delay(10000)
+            _uiState.value.days.filter { dayState -> dayState.isSelected && dayState.date != null }
+                .forEach { dayState ->
+                    val now = dayState.date!!.atStartOfDay().toInstant(ZoneOffset.UTC)
+                    timeKeepingRepository.sendTimeKeeping(now)
+                }
             _uiState.update { it.copy(reportingLoading = false) }
         }
     }
