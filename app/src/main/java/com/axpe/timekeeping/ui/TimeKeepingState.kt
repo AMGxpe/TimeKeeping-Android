@@ -43,6 +43,11 @@ class TimeKeepingAppState(
         navController.navigateToHome(navOptionsBuilder)
     }
 
+
+    fun navigateToReporting(navOptionsBuilder: NavOptionsBuilder.() -> Unit = {}) {
+        navController.navigateToReporting(navOptionsBuilder)
+    }
+
     fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
         trace("Navigation: ${topLevelDestination.name}") {
             val topLevelNavOptions = navOptions {

@@ -48,7 +48,7 @@ fun TimeKeepingApp(appState: TimeKeepingAppState) {
             modifier = Modifier.padding(innerPadding)
         ) {
             screenLogin {
-                appState.navigateToHome {
+                appState.navigateToReporting {
                     popUpTo(LoginRoute) {
                         inclusive = true
                     }
